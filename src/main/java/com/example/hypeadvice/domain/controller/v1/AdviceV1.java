@@ -12,9 +12,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,5 +47,19 @@ public class AdviceV1 {
         List<Advice> all = adviceService.findAll();
         ResponseEntity responseEntity = new ResponseEntity(all, HttpStatus.OK);
         return responseEntity;
+    }
+    
+    @PostMapping
+    @Operation(
+    		summary = "Cadastrar conselho.",
+    		description = "Método utilizado para cadastrar um conselho."
+    		)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso.", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Advice.class)))}),
+    })
+    public ResponseEntity<?> create(@Validated @RequestBody Advice advice) {
+    	Advice saved = adviceService.save(advice);
+    	return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 }

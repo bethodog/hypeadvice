@@ -33,13 +33,25 @@
 			</h:form>
 		</b:jumbotron>
 		<b:jumbotron>
+		    <b:messages globalOnly="true" showSummary="true" redisplay="false" id="mensagensGlobaisId"/>
+		    <h:form id="form-advice-id">
+		        <b:form>
+		            <b:inputText type="number" label="Pesquisar Conselho por ID" placeholder="ID..." value="#{adviceBean.advice.id}" />
+		            <b:message for="@previous" />
+		
+		            <b:commandButton actionListener="#{adviceBean.buscarId}" look="info" update="form-advice-list mensagensGlobaisId" value="Buscar por ID" >
+		            </b:commandButton>
+		        </b:form>
+		    </h:form>
+		</b:jumbotron>
+		<b:jumbotron>
 			<h:form id="form-advice-list">
 				<h4 style="text-align:center">Conselhos Localizados</h4>
-				<b:dataTable value="#{adviceListBean.adviceListVO.slips}"
-							 var="advice">
+				<b:dataTable value="#{not empty adviceListBean.adviceListVO.slips ? adviceListBean.adviceListVO.slips : [adviceBean.adviceVO.slip]}"
+             				var="advice">
 					<b:dataTableColumn style="width:10%" value="#{advice.id}" />
-					<b:dataTableColumn value="#{advice.advice}" />
-					<b:dataTableColumn value="#{advice.date}" />
+					<b:dataTableColumn value="#{advice.advice}" label="Conselho"/>
+					<b:dataTableColumn value="#{advice.date}" label="Data" rendered="#{not empty adviceListBean.adviceListVO.slips}" />
 				</b:dataTable>
 			</h:form>
 		</b:jumbotron>

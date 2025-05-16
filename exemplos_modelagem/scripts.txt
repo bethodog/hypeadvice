@@ -1,0 +1,30 @@
+CREATE TABLE customer (
+	id int8 NOT NULL,
+	nome varchar(100) NULL,
+	endereco varchar(100) NULL,
+	telefone varchar(14) NOT NULL,
+	CONSTRAINT customer_pkey PRIMARY KEY (id)
+);
+CREATE INDEX customer_nome_idx ON customer(nome);
+
+
+CREATE TABLE advice (
+	id int8 NOT NULL,
+	descricao varchar NOT NULL,
+	tipo text NOT NULL,
+	cliente_id int8 NOT NULL,
+	CONSTRAINT advice_pk PRIMARY KEY (id),
+	CONSTRAINT advice_customer_fk FOREIGN KEY (cliente_id) REFERENCES customer(id)
+);
+CREATE INDEX advice_descricao_idx ON advice(descricao);
+
+
+CREATE TABLE sales (
+	id int8 NOT NULL,
+	cliente_id int8 NOT NULL,
+	conselho_id int8 NOT NULL,
+	data_compra date NULL,
+	CONSTRAINT sales_pk PRIMARY KEY (id),
+	CONSTRAINT sales_advice_fk FOREIGN KEY (conselho_id) REFERENCES advice(id),
+	CONSTRAINT sales_customer_fk FOREIGN KEY (cliente_id) REFERENCES customer(id)
+);

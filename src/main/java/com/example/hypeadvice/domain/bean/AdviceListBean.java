@@ -1,13 +1,13 @@
 package com.example.hypeadvice.domain.bean;
 
+import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.example.hypeadvice.domain.entity.Advice;
 import com.example.hypeadvice.domain.service.AdviceService;
 import com.example.hypeadvice.domain.vo.AdviceListVO;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.faces.bean.ViewScoped;
-import javax.inject.Named;
 
 @Named
 @ViewScoped
@@ -29,7 +29,7 @@ public class AdviceListBean extends Bean {
             addMessageError(e);
         }
     }
-
+    
     public AdviceListVO getAdviceListVO() {
         return adviceListVO;
     }
@@ -45,4 +45,5 @@ public class AdviceListBean extends Bean {
     public void setAdvice(Advice advice) {
         this.advice = advice;
     }
+
 }

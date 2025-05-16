@@ -1,14 +1,17 @@
 package com.example.hypeadvice.domain.bean;
 
-import com.example.hypeadvice.domain.entity.Advice;
-import com.example.hypeadvice.domain.service.AdviceService;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Named;
-import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.hypeadvice.domain.entity.Advice;
+import com.example.hypeadvice.domain.service.AdviceService;
+import com.example.hypeadvice.domain.vo.AdviceVO;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 @Named
 @ViewScoped
@@ -18,9 +21,19 @@ public class AdviceBean extends Bean {
 
     private Advice advice = new Advice();
     private List<Advice> advices;
+    private AdviceVO adviceVO;
 
     public void initBean() {
         advices = adviceService.findAll();
+    }
+    
+    public void buscarId() {
+        try {
+            this.adviceVO = adviceService.buscarId(advice);
+            addFaceMessage(FacesMessage.SEVERITY_INFO, "Sucesso", null);
+        } catch (Exception e) {
+            addMessageError(e);
+        }
     }
 
     public List<Advice> getAdvices() {
@@ -57,4 +70,12 @@ public class AdviceBean extends Bean {
     public void setAdvice(Advice advice) {
         this.advice = advice;
     }
+
+	public AdviceVO getAdviceVO() {
+		return adviceVO;
+	}
+
+	public void setAdviceVO(AdviceVO adviceVO) {
+		this.adviceVO = adviceVO;
+	}
 }

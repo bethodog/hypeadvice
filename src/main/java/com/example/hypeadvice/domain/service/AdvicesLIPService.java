@@ -1,6 +1,12 @@
 package com.example.hypeadvice.domain.service;
 
+import java.util.Date;
+
+import org.apache.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
 import com.example.hypeadvice.domain.entity.Advice;
+import com.example.hypeadvice.domain.exception.RecursoNaoEncontradoException;
 import com.example.hypeadvice.domain.utils.Utils;
 import com.example.hypeadvice.domain.vo.AdviceListVO;
 import com.example.hypeadvice.domain.vo.AdviceVO;
@@ -8,8 +14,6 @@ import com.example.hypeadvice.domain.vo.Slip;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.apache.http.HttpStatus;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AdvicesLIPService {
@@ -68,6 +72,50 @@ public class AdvicesLIPService {
         }
         else {
             throw new RuntimeException("Status Code" + status + ", message " + response.getStatusText());
+        }
+    }
+    
+    public AdviceVO buscarById(Long slip_id) throws UnirestException {
+        HttpResponse<String> response = Unirest.get("https://api.adviceslip.com/advice/" + slip_id)
+                .header("Accept-Language", "br")
+                .header("Content-Type", "application/json")
+                .asString();
+        int status = response.getStatus();
+        if (HttpStatus.SC_OK == status) {
+        	AdviceVO vo = null;
+            try {
+                String body = response.getBody();
+                if (body.contains("Advice slip not found")) {
+                    throw new RecursoNaoEncontradoException(" Advice slip not found. Busca do Conselho Id: " + slip_id);
+                }
+                vo = Utils.jsonToObject(AdviceVO.class, adicionarDate(body));
+            } catch (Exception e) {
+                throw new RuntimeException("Status Code" + status + ", message " + e.getMessage());
+            }
+
+            if (vo != null) {
+                return vo;
+            } else {
+            	throw new RecursoNaoEncontradoException(" Advice slip not found. Busca do Conselho Id: " + slip_id);
+            }
+        }
+        else {
+            throw new RuntimeException("Status Code" + status + ", message " + response.getStatusText());
+        }
+    }
+    
+    private static String adicionarDate(String texto) {
+        // Encontra a posição da última chave "}" dentro do objeto "slip"
+        int lastBraceIndex = texto.lastIndexOf("}}");
+        Date dateNow = new Date();
+        
+        if (lastBraceIndex != -1) {
+            StringBuilder sb = new StringBuilder(texto);
+            sb.insert(lastBraceIndex, ", \"date\": \"\"");
+            return sb.toString();
+        } else {
+            // Caso a estrutura esperada não seja encontrada, retorna o texto original
+            return texto;
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.hypeadvice.domain.entity;
 
+import com.example.hypeadvice.domain.enums.AdviceTypeEnum;
 import com.google.gson.annotations.Expose;
 import lombok.Data;
 import javax.persistence.*;
@@ -20,6 +21,15 @@ public class Advice extends Entity {
     @Expose
     @Column(name = "DESCRICAO", columnDefinition = "TEXT", length = 1000, nullable = false)
     private String descricao;
+    
+    @Expose
+    @Column(name = "TIPO", columnDefinition = "TEXT", length = 1000, nullable = false)
+    private AdviceTypeEnum tipo;
+    
+    public Advice(String adviceStr, AdviceTypeEnum type) {
+        this.descricao = adviceStr;
+        this.tipo = type;
+    }
 
     public Advice(String adviceStr) {
         this.descricao = adviceStr;
