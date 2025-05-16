@@ -29,6 +29,13 @@
 
 					<b:inputTextarea placeholder="Descrição..." value="#{adviceBean.advice.descricao}" />
 					<b:message for="@previous" />
+					
+					<b:selectOneMenu id="tipo" value="#{adviceBean.advice.tipo}" label="Tipo" required="true" requiredMessage="O campo Tipo é obrigatório.">
+						<f:selectItem itemValue="#{null}" itemLabel="Selecionar" noSelectionOption="true"/>
+						<f:selectItem itemValue="GRATUITO" itemLabel="Gratuito"/>
+						<f:selectItem itemValue="PAGO" itemLabel="Pago"/>
+						</b:selectOneMenu>
+					<b:message for="tipo" />
 
 					<b:commandButton actionListener="#{adviceBean.salvar}"  update="form-advice form-advice-list mensagensGlobais" value="Salvar" />
 					<b:commandButton actionListener="#" look="info"  value="Gerar" >
@@ -45,6 +52,7 @@
 					<b:dataTableColumn style="width:10%" value="#{advice.id}" />
 					<b:dataTableColumn value="#{advice.nome}" />
 					<b:dataTableColumn value="#{advice.descricao}" />
+					<b:dataTableColumn value="#{advice.tipo}" />
 					<b:dataTableColumn style="width:20%">
 						<b:commandButton actionListener="#"  look="warning" update="form-advice form-advice-list" value="Editar" />
 						<b:commandButton actionListener="#"  look="danger" update="form-advice form-advice-list" value="Excluir" />
